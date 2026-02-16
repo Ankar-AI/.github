@@ -5,4 +5,4 @@
 - [ ] I have completed the Notion task card for this PR
 - [ ] I have prefixed the title of the PR with the Notion task card ID (e.g. [AAT-1] ___)
 - [ ] I have tested this locally
-- [ ] These changes are backwards-compatible with the Frontend
+- [ ] I have made sure these changes are backwards-compatible and do not require abnormal service deployment order
