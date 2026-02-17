@@ -1,7 +1,26 @@
-## Change Log
-* \<BULLET POINT CHANGES HERE>
+## Summary
+_Explain the reason for the change - not what has been changed_
+* _Design Review Link (if applicable)_
 
-## Checklist before requesting a review
-- [ ] I have completed the Notion task card for this PR
-- [ ] I have prefixed the title of the PR with the Notion task card ID (e.g. [AAT-1] ___)
-- [ ] I have tested this locally
+### Screenshots/Videos
+_Any screenshots relevant from testing_
+
+## Release Plan
+_Include any feature flags required and how this will be rolled out to users_
+
+## Review guide
+_Any helpful points worth noting during review_
+
+## Future work
+_Additional work required in the future on top of this_
+
+## Checklist
+### Author
+- [] I have self-reviewed the code
+- [] I have added relevant tests (shared code, cross user sharing, complex logic, etc)
+- [] All APIs have permission checks
+- [] All APIs are backwards compatible
+
+### Reviewer
+- [] All APIs have permission checks
+- [] All APIs are backwards compatible
