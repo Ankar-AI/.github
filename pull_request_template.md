@@ -5,6 +5,8 @@ _Explain the reason for the change - not what has been changed_
 ### Screenshots/Videos
 _Any screenshots relevant from testing_
 
+## Release Plan
+_Include any feature flags required and how this will be rolled out to users_
 ## Review guide
 _Any helpful points worth noting during review_
 
