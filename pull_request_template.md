@@ -17,6 +17,9 @@ _Include any feature flags required and how this will be rolled out to users_
 ## Review guide
 _Any helpful points worth noting during review_
 
+## Related PRs
+_Any related PRs from across the stack which require/rely on this PR_
+
 ## Future work
 _Additional work required in the future on top of this_
 
