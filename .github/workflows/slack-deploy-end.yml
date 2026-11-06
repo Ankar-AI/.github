@@ -26,6 +26,7 @@ jobs:
   notify:
     name: Notify Slack (deploy result)
     runs-on: ubuntu-latest
+
     steps:
       - name: Update Slack message
         continue-on-error: true

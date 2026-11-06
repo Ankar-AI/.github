@@ -26,12 +26,15 @@ jobs:
       ts: ${{ steps.slack.outputs.ts }}
       version: ${{ steps.info.outputs.version }}
       url: ${{ steps.info.outputs.url }}
+
     steps:
-      - name: Resolve release info
+      - name: Resolve information
         id: info
         run: |
           echo "version=${{ github.event.inputs.version || github.event.release.tag_name || github.sha }}" >> "$GITHUB_OUTPUT"
           echo "url=${{ github.event.release.html_url || format('{0}/{1}/commit/{2}', github.server_url, github.repository, github.sha) }}" >> "$GITHUB_OUTPUT"
+          echo "loading_emoji=${{ github.actor == 'LironToledo' && ':liron-loading:' || ':loading:' }}" >> "$GITHUB_OUTPUT"
+
       - name: Send Slack message
         id: slack
         continue-on-error: true
@@ -48,7 +51,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ inputs.emoji }} <${{ steps.info.outputs.url }}|${{ steps.info.outputs.version }}> ${{ github.actor == 'LironToledo' && ':liron-loading:' || ':loading:' }}"
+                    "text": "${{ inputs.emoji }} <${{ steps.info.outputs.url }}|${{ steps.info.outputs.version }}> ${{ steps.info.outputs.loading_emoji }}"
                   }
                 },
                 {
