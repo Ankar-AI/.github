@@ -18,13 +18,10 @@ on:
         type: string
         required: true
       result:
-        description: The result of the deployment job
-        type: choice
-        options:
-          - success
-          - failure
-          - cancelled
-          - skipped
+        # We unfortunately cannot make use of 'choice' here, so we will have to enumerate them here
+        # and keep an eye out for what we pass
+        description: "The result of the deployment job (one of: success | failure | cancelled | skipped)"
+        type: string
         required: true
 
 jobs:
