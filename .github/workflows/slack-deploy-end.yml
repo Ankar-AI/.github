@@ -17,9 +17,14 @@ on:
       url:
         type: string
         required: true
-      success:
-        type: boolean
-        description: Whether the deploy job succeeded
+      result:
+        description: The result of the deployment job
+        type: choice
+        options:
+          - success
+          - failure
+          - cancelled
+          - skipped
         required: true
 
 jobs:
@@ -44,7 +49,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ inputs.emoji }} <${{ inputs.url }}|${{ inputs.version }}> ${{ inputs.success && ':white_check_mark:' || ':x:' }}"
+                    "text": "${{ inputs.emoji }} <${{ inputs.url }}|${{ inputs.version }}> ${{ inputs.result == 'success' && ':white_check_mark:' || ':x:' }}"
                   }
                 },
                 {
