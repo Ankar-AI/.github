@@ -1,0 +1,71 @@
+name: Slack Deploy Start
+
+on:
+  workflow_call:
+    inputs:
+      emoji:
+        type: string
+        description: "Slack emoji identifying the app"
+        required: true
+    outputs:
+      ts:
+        description: Slack message timestamp, pass to slack-deploy-end.yml
+        value: ${{ jobs.notify.outputs.ts }}
+      version:
+        description: Resolved release version
+        value: ${{ jobs.notify.outputs.version }}
+      url:
+        description: Resolved release URL
+        value: ${{ jobs.notify.outputs.url }}
+
+jobs:
+  notify:
+    name: Notify Slack (deploy started)
+    runs-on: ubuntu-latest
+    outputs:
+      ts: ${{ steps.slack.outputs.ts }}
+      version: ${{ steps.info.outputs.version }}
+      url: ${{ steps.info.outputs.url }}
+
+    steps:
+      - name: Resolve information
+        id: info
+        env:
+          VERSION: ${{ github.event.inputs.version || github.event.release.tag_name || github.sha }}
+          URL: ${{ github.event.release.html_url || format('{0}/{1}/commit/{2}', github.server_url, github.repository, github.sha) }}
+          EMOJI: ${{ github.actor == 'LironToledo' && ':liron-loading:' || ':loading:' }}
+        run: |
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "url=${URL}" >> "$GITHUB_OUTPUT"
+          echo "loading_emoji=${EMOJI}" >> "$GITHUB_OUTPUT"
+
+      - name: Send Slack message
+        id: slack
+        continue-on-error: true
+        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d # v2.0.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            {
+              "channel": "${{ vars.ANKAR_RELEASE_SLACK_CHANNEL_ID }}",
+              "text": "Release ${{ steps.info.outputs.version }} triggered by @${{ github.actor }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ inputs.emoji }} <${{ steps.info.outputs.url }}|${{ steps.info.outputs.version }}> ${{ steps.info.outputs.loading_emoji }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Triggered by <https://github.com/${{ github.actor }}|@${{ github.actor }}>"
+                    }
+                  ]
+                }
+              ]
+            }

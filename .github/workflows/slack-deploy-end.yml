@@ -1,0 +1,62 @@
+name: Slack Deploy End
+
+on:
+  workflow_call:
+    inputs:
+      emoji:
+        type: string
+        description: "Slack emoji identifying the app"
+        required: true
+      ts:
+        type: string
+        description: Slack message timestamp from slack-deploy-start.yml
+        required: true
+      version:
+        type: string
+        required: true
+      url:
+        type: string
+        required: true
+      result:
+        # We unfortunately cannot make use of 'choice' here, so we will have to enumerate them here
+        # and keep an eye out for what we pass
+        description: "The result of the deployment job (one of: success | failure | cancelled | skipped)"
+        type: string
+        required: true
+
+jobs:
+  notify:
+    name: Notify Slack (deploy result)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update Slack message
+        continue-on-error: true
+        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d # v2.0.0
+        with:
+          method: chat.update
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            {
+              "channel": "${{ vars.ANKAR_RELEASE_SLACK_CHANNEL_ID }}",
+              "ts": "${{ inputs.ts }}",
+              "text": "Release ${{ inputs.version }} triggered by @${{ github.actor }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ inputs.emoji }} <${{ inputs.url }}|${{ inputs.version }}> ${{ inputs.result == 'success' && ':white_check_mark:' || ':x:' }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Triggered by <https://github.com/${{ github.actor }}|@${{ github.actor }}>"
+                    }
+                  ]
+                }
+              ]
+            }
